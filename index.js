@@ -1,6 +1,7 @@
 
+import 'dotenv/config';
+import mongoose from "mongoose";
 import express from 'express';
-import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import prayers from './routes/Prayer.route.js'
 import ConnectDB from './config/db.connect.js';
@@ -11,10 +12,10 @@ import ReminderRoute from './routes/Reminder.route.js';
 import TasbeehRoute from './routes/Tasbeeh.route.js'
 import DateRoute from './routes/Date.route.js'
 import cors from 'cors'
-// Correct usage of dotenv.config
-dotenv.config({ path: './.env' });
 
 const app = express();
+
+// CORS configuration
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
     ? ["https://your-frontend-domain.vercel.app"] 
@@ -24,40 +25,32 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
+// Middleware
+app.use(express.json());
+app.use(cookieParser());
 
+// Health check route
 app.get("/", (req, res) => {
-    res.send("Hello World");
+    res.json({ message: "Server is running!" });
 });
 
+// Connect to database
 ConnectDB();
 
+// Routes
+app.use("/auth", UserRoutes);
+app.use("/ayah", AyahRoutes);
+app.use("/user", prayers);
+app.use("/note", NotesRoute);
+app.use("/reminder", ReminderRoute);
+app.use("/tasbeeh", TasbeehRoute);
+app.use("/date", DateRoute);
 
-
-app.use(express.json()); // Middleware to parse JSON bodies
-app.use(cookieParser())
-app.use("/auth",UserRoutes)
-app.use("/ayah",AyahRoutes)
-app.use("/user",prayers)
-app.use("/note",NotesRoute)
-app.use("/reminder",ReminderRoute)
-app.use("/tasbeeh",TasbeehRoute)
-app.use("/date",DateRoute)
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
-// Export the app for testing purpo
-
-// Add global error handler before app.listen
+// Error handling middleware
 app.use((err, req, res, next) => {
-  console.error('Error:', err);
-  res.status(500).json({ 
-    error: 'Internal Server Error',
-    message: process.env.NODE_ENV === 'production' ? 'Something went wrong' : err.message 
-  });
+  console.error(err.stack);
+  res.status(500).json({ message: "Something went wrong!" });
 });
 
-// Add 404 handler
-app.use('*', (req, res) => {
-  res.status(404).json({ error: 'Route not found' });
-});
+// Export for Vercel
+export default app;

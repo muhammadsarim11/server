@@ -1,14 +1,24 @@
 
-// db connection
 import mongoose from "mongoose";
 
 const ConnectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI);
-    console.log('MongoDB connected successfully');
+    const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI;
+    
+    console.log('Environment check:', {
+      hasMongoUri: !!mongoUri,
+      nodeEnv: process.env.NODE_ENV
+    });
+    
+    if (!mongoUri) {
+      throw new Error('MONGODB_URI environment variable is not set');
+    }
+
+    const conn = await mongoose.connect(mongoUri);
+    console.log(`MongoDB connected: ${conn.connection.host}`);
   } catch (error) {
-    console.error('MongoDB connection failed:', error);
-    process.exit(1);
+    console.error("MongoDB connection error:", error.message);
+    throw error;
   }
 };
 
