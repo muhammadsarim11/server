@@ -47,3 +47,17 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 // Export the app for testing purpo
+
+// Add global error handler before app.listen
+app.use((err, req, res, next) => {
+  console.error('Error:', err);
+  res.status(500).json({ 
+    error: 'Internal Server Error',
+    message: process.env.NODE_ENV === 'production' ? 'Something went wrong' : err.message 
+  });
+});
+
+// Add 404 handler
+app.use('*', (req, res) => {
+  res.status(404).json({ error: 'Route not found' });
+});
