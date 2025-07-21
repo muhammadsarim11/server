@@ -36,7 +36,7 @@ export const GetNotes = catchAsync( async(req,res)=>{
     const note = await Note.find({user})
 
     if(note.length==0){
-        return res.status(404).json({
+        return res.json({
             message:"user has not created any note"
         })
 
