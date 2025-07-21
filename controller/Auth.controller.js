@@ -29,10 +29,11 @@ console.log(user._id)
 
 const options = {
     httpOnly: false,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+    secure: true,
+    sameSite: "None", // Cross-domain ke liye None chahiye
     maxAge: 7 * 24 * 60 * 60 * 1000,
-    path: "/"
+    path: "/",
+    // domain set mat karo - browser automatically handle karega
 }
 
 
