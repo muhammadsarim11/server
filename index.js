@@ -12,10 +12,18 @@ import TasbeehRoute from './routes/Tasbeeh.route.js'
 import DateRoute from './routes/Date.route.js'
 import cors from 'cors'
 
+const app = express();
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production' 
+    ? "https://client-qmlg.vercel.app"  // ✅ No trailing slash
+    : "http://localhost:5173",
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
 // Load environment variables
   dotenv.config();
 
-const app = express();
 
 // Debug environment variables
 console.log('Environment Variables Check:', {
@@ -25,14 +33,6 @@ console.log('Environment Variables Check:', {
 });
 
 // CORS configuration
-app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? "https://client-qmlg.vercel.app"  // ✅ No trailing slash
-    : "http://localhost:5173",
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-  allowedHeaders: ["Content-Type", "Authorization"]
-}));
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
