@@ -28,9 +28,9 @@ const token = SignToken({ id: user._id })
 console.log(user._id)
 
 const options = {
-      httpOnly: true,                                 // JS can’t read
-    secure: process.env.NODE_ENV === "production",  // HTTPS only in prod
-    sameSite: "lax",                                 // blocks CSRF for same origin apps
+     httpOnly: true,
+  secure: true,          // Required for SameSite: 'None'
+  sameSite: "None",                               // blocks CSRF for same origin apps
     maxAge: 7 * 24 * 60 * 60 * 1000,
 }
 
@@ -65,9 +65,9 @@ export const LoginUser = async (req,res)=>{
     const token = SignToken({id:user._id})
 
     const options = {
-        httpOnly: false,
-        secure: false,
-        sameSite: "lax",
+       httpOnly: true,
+  secure: true,          // Required for SameSite: 'None'
+  sameSite: "None",
         maxAge: 7 * 24 * 60 * 60 * 1000,
     }
 
