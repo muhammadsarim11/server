@@ -46,7 +46,6 @@ return res.cookie("accessToken", token , options).status(201).json({
 
 }
 
-
 export const LoginUser = async (req,res)=>{
     const {email,password}= req.body
     if(!email || !password){
@@ -66,13 +65,15 @@ export const LoginUser = async (req,res)=>{
     const token = SignToken({id:user._id})
 
     const options = {
-        httpOnly: false, // Match RegisterUser settings
-        secure: true,
-        sameSite: "None",
+        httpOnly: false,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
         maxAge: 7 * 24 * 60 * 60 * 1000,
+        path: "/"
     }
 
     console.log('Setting cookie with token:', token);
+    console.log('Cookie options:', options);
 
     return res.cookie("accessToken", token, options).status(200).json({
         message: "success",
@@ -80,20 +81,19 @@ export const LoginUser = async (req,res)=>{
         token
     })
 }
-
 // src/controllers/auth.controller.js
-
 export const logoutUser = (req, res) => {
-  res.cookie("accessToken", "", {
-    httpOnly: true,
-    expires: new Date(0),          // Immediately expire cookie
-    sameSite: "strict",
+  const options = {
+    httpOnly: false,
     secure: process.env.NODE_ENV === "production",
-  });
+    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+    expires: new Date(0),
+    path: "/"
+  };
 
+  res.cookie("accessToken", "", options);
   res.status(200).json({ message: "Logged out successfully" });
 };
-
 
 
 
