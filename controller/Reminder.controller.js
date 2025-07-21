@@ -39,7 +39,7 @@ export const GetReminder = catchAsync(async (req, res) => {
   const reminder = await Reminder.find({ user: req.user.id });
 
   if (reminder.length === 0) {
-    return res.status(404).json({
+    return res.json({
       message: "No reminders found for this user",
     });
   }

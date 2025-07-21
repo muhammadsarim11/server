@@ -34,7 +34,7 @@ export const GetTasbeeh = catchAsync( async(req,res)=>{
     const tasbeeh =  await Tasbeeh.find({user:req.user.id})
 
     if(tasbeeh.length ===0){
-return res.status(404).json({
+return res.json({
     message:"no tasbeeh found for this user"
 })
 
