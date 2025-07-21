@@ -1,7 +1,6 @@
 
-import 'dotenv/config';
-import mongoose from "mongoose";
 import express from 'express';
+import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import prayers from './routes/Prayer.route.js'
 import ConnectDB from './config/db.connect.js';
@@ -13,7 +12,17 @@ import TasbeehRoute from './routes/Tasbeeh.route.js'
 import DateRoute from './routes/Date.route.js'
 import cors from 'cors'
 
+// Load environment variables
+  dotenv.config();
+
 const app = express();
+
+// Debug environment variables
+console.log('Environment Variables Check:', {
+  hasMongoUri: !!process.env.MONGO_URI,
+  hasJwtSecret: !!process.env.JWT_SECRET,
+
+});
 
 // CORS configuration
 app.use(cors({
@@ -50,6 +59,12 @@ app.use("/date", DateRoute);
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ message: "Something went wrong!" });
+  
+});
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
 
 // Export for Vercel
