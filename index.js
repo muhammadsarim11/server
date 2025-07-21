@@ -15,7 +15,23 @@ import cors from 'cors'
 const app = express();
 app.use(
   cors({
-    origin: "https://client-qmlg.vercel.app",
+    origin: function (origin, callback) {
+      // Allow requests with no origin (mobile apps, etc.)
+      if (!origin) return callback(null, true);
+      
+      const allowedOrigins = [
+        "https://client-qmlg.vercel.app",
+        "http://localhost:3000",
+        "http://localhost:5173", // Vite default
+        origin // Allow the actual origin
+      ];
+      
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(null, true); // Temporarily allow all for testing
+      }
+    },
     credentials: true,
   })
 );

@@ -28,11 +28,11 @@ const token = SignToken({ id: user._id })
 console.log(user._id)
 
 const options = {
-     
-  httpOnly: false, // for frontend to read
-  secure: true,    // REQUIRED for cross-site cookie with SameSite=None
-  sameSite: "None",// allow cross-site requests
-  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    httpOnly: false,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    path: "/"
 }
 
 
