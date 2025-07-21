@@ -66,14 +66,13 @@ export const LoginUser = async (req,res)=>{
     const token = SignToken({id:user._id})
 
     const options = {
-     
-  httpOnly: false, // for frontend to read
-  secure: true,    // REQUIRED for cross-site cookie with SameSite=None
-  sameSite: "None",// allow cross-site requests
-  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        httpOnly: false, // Match RegisterUser settings
+        secure: true,
+        sameSite: "None",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
     }
 
-    console.log('Setting cookie with token:', token); // Debug log
+    console.log('Setting cookie with token:', token);
 
     return res.cookie("accessToken", token, options).status(200).json({
         message: "success",
