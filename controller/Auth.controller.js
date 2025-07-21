@@ -29,9 +29,10 @@ console.log(user._id)
 
 const options = {
      
-  secure: true,          // Required for SameSite: 'None'
-  sameSite: "None",                               // blocks CSRF for same origin apps
-    maxAge: 7 * 24 * 60 * 60 * 1000,
+  httpOnly: false, // for frontend to read
+  secure: true,    // REQUIRED for cross-site cookie with SameSite=None
+  sameSite: "None",// allow cross-site requests
+  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
 }
 
 
@@ -66,9 +67,10 @@ export const LoginUser = async (req,res)=>{
 
     const options = {
      
-  secure: true,          // Required for SameSite: 'None'
-  sameSite: "None",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
+  httpOnly: false, // for frontend to read
+  secure: true,    // REQUIRED for cross-site cookie with SameSite=None
+  sameSite: "None",// allow cross-site requests
+  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     }
 
     console.log('Setting cookie with token:', token); // Debug log
